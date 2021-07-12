@@ -5,6 +5,8 @@
 declare module "alt-client" {
   import * as shared from "alt-shared";
 
+  type StackFrameType = "script" | "constructor" | "eval" | "wasm";
+
   export const enum Locale {
     Arabic = "ar",
     Belarusian = "by",
@@ -932,6 +934,13 @@ declare module "alt-client" {
     readonly statusCode: number;
     readonly body: string;
     readonly headers: Record<string, string>;
+  }
+
+  export interface IStackFrame {
+    readonly script: string;
+    readonly line: number;
+    readonly function: string;
+    readonly type: StackFrameType;
   }
 
   /** @beta */
@@ -2692,6 +2701,16 @@ declare module "alt-client" {
    * @beta
    */
   export function getHeadshotBase64(id: number): string;
+
+  /**
+   * Gets the current V8 stack trace.
+   *
+   * @param maxDepth Maximum depth of the stack trace. Defaults to 16.
+   * @returns Array of stack frames, starting at the latest frame.
+   *
+   * @alpha
+   */
+  export function getStackTrace(maxDepth?: number): Array<IStackFrame>;
 
   export * from "alt-shared";
 }
